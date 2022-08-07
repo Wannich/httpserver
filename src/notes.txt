@@ -1,0 +1,1 @@
+Rewrite "read_file" function to write a files content directly into a given variable using pointers and memory addresses
