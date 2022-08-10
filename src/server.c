@@ -8,6 +8,8 @@
 #include <string.h>
 
 #include "functs.h"
+#include "httphandler.h"
+
 
 #define PORT 4040
 

@@ -7,4 +7,6 @@ int get_file_length(char filename[]);
 
 char * read_file(char filename[], char * buffer);
 
+typedef struct http_request;
+
 #endif

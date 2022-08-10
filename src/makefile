@@ -1,2 +1,2 @@
 default:
-	gcc server.c functs.c -o server
+	gcc server.c functs.c httphandler.c -o server

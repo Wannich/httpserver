@@ -5,7 +5,11 @@
 
 int get_file_length(char filename[]){
     struct stat st;
-    stat(filename, &st);
+    if((stat(filename, &st)) != 0)
+    {
+        perror("Stat failed");
+        exit(EXIT_FAILURE);
+    }
     int file_length = st.st_size;
 
     return file_length;
@@ -23,15 +27,8 @@ char * read_file(char filename[], char * buffer){
         perror("Opening file failed");
         exit(EXIT_FAILURE);
     }
-
-    char content[file_length];
+    
     char c = fgetc(fp);
-
-
-    if(c==EOF)
-    {
-        printf("Error!");
-    }
 
     while(c!=EOF){
         *buffer = c;
@@ -43,3 +40,9 @@ char * read_file(char filename[], char * buffer){
 
     return 0;
 }
+
+typedef struct http_request {
+    char * method;
+    char * path;
+    char * User_Agent;
+};
