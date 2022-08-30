@@ -1,3 +1,6 @@
 src/.vscode/
 src/notes.txt
 src/testing/
+.vscode/
+www/
+src/server

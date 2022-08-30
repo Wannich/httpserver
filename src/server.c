@@ -13,9 +13,17 @@
 
 #define PORT 4040
 
+struct http_request {
+    char * method;
+    char * path;
+    char * User_Agent;
+};
+
 int main(){
 
     /* define necessary variables */
+
+    char * webroot = "www";
 
     int socketfd, connectionfd;
     struct sockaddr_in address;
@@ -47,21 +55,11 @@ int main(){
     }
 
 
-    int file_length = get_file_length("index.html");
+    char * path = malloc(1);
 
-    printf("File is %d bytes long.\n", file_length);
-
-    char *test = malloc(file_length);
-
-    read_file("index.html", test);
-
-    printf("%s", test);
+    char *test = malloc(1);
 
     char buffer[500];
-
-    char response[500] = "HTTP/1.1 200 OK\nServer: WanServer/0.1\nContent-Type: text/html\nConnection: Closed\n\n";
-
-    strcat(response, test);
 
     /* listen to requests in a loop and quit if there is any errors */
 
@@ -79,9 +77,29 @@ int main(){
 
         read(connectionfd, buffer, sizeof(buffer));
 
+        struct http_request data = http_read_request(buffer);
+
+        path = realloc(path,(strlen(webroot) + strlen(data.path)));
+
+        strcat(path, webroot);
+        strcat(path, data.path);
+
+        test = realloc(test, get_file_length(path));
+
+        char response[500] = "HTTP/1.1 200 OK\nServer: WanServer/0.1\nContent-Type: text/html\nConnection: Closed\n\n";
+
+        if(read_file(path, test) != 0)
+        {
+            strcat(response, "Error 404 File not found");
+        } else {
+            strcat(response, test);
+        }
+
+
+
         write(connectionfd, response, sizeof(response));
 
-        printf("%s", buffer);
+        printf("Method: %s\nPath: %s\nUser-Agent: %s\n", data.method, data.path, data.User_Agent);
 
         if((shutdown(connectionfd, SHUT_RDWR)) == -1)
         {
@@ -90,6 +108,9 @@ int main(){
             close(socketfd);
             exit(EXIT_FAILURE);
         }
+
+        memset(path,0,strlen(path));
+        memset(test,0,strlen(test));
 
     }
 

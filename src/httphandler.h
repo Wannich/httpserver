@@ -9,4 +9,6 @@ struct http_request http_read_request(char request[]);
 
 int httphandle(int connectionfd);
 
+struct http_request;
+
 #endif
